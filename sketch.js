@@ -19,7 +19,6 @@ let idCount = 0;
 let title = [0, 0, 0];
 
 function preload() {
-  // img = loadImage('dog_cat.jpg');
   emoPos1 = loadImage('emoPos1.png');
   emoPos2 = loadImage('emoPos2.png');
   emoNeg1 = loadImage('emoNeg1.png');
@@ -94,20 +93,20 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(185);
   video = createCapture(VIDEO);
-  video.size(960, 720);
+  video.size(AUTO, AUTO);
   video.hide();
   detector.detect(video, gotDetections); 
   feed = createVideo(
-    ['IG_Feed_v1_2.mp4', 'assets/small.ogv', 'assets/small.webm'], vidLoad);
-  feed.size(1442, AUTO);
+    ['FB_Feed_v2.mp4', 'assets/small.ogv', 'assets/small.webm'], vidLoad);
+  feed.size(960, 720);
   //feed.position(960 + windowWidth/8, 390 + windowHeight/8);
 }
   
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  // video.size(windowWidth - 200, windowHeight - 200);
-}
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+//   // video.size(windowWidth - 200, windowHeight - 200);
+// }
 
 
 function mousePressed() {
@@ -126,7 +125,7 @@ function vidLoad() {
 function draw() {
   image(video, windowWidth/8, windowHeight/8, 960, 720);
   //video.size(windowWidth - 200, windowHeight - 200);
-  feed.position(510 + windowWidth/8, windowHeight/8);
+  feed.position(720 + windowWidth/8, windowHeight/8);
 
   
   let labels = Object.keys(detections);
