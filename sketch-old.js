@@ -7,9 +7,9 @@
 // p5.js Web Editor - Webcam: https://editor.p5js.org/codingtrain/sketches/VIYRpcME3
 // p5.js Web Editor - Webcam Persistence: https://editor.p5js.org/codingtrain/sketches/Vt9xeTxWJ
 
-
-let emoPos;
+// let img;
 let emoNeu;
+let emoPos;
 let emoNeg;
 let video;
 let feed;
@@ -19,12 +19,11 @@ let idCount = 0;
 let title = [0, 0, 0];
 
 function preload() {
-  emoPos = loadImage('emoPos.png');
   emoNeu = loadImage('emoNeu.png');
+  emoPos = loadImage('emoPos.png');
   emoNeg = loadImage('emoNeg.png');
-  detector = ml5.objectDetector('cocossd');
+detector = ml5.objectDetector('cocossd');
 }
-
 
 function gotDetections(error, results) {
   if (error) {
@@ -87,90 +86,95 @@ function gotDetections(error, results) {
   detector.detect(video, gotDetections);
 }
 
-
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  background(185);
+  createCanvas(960, 720);
   video = createCapture(VIDEO);
-  video.size(AUTO, AUTO);
+  // Rahmen werden nicht mehr angezeigt, wenn .size auf AUTO
+  //video.size(AUTO, AUTO);
+  video.size(960, 720);
   video.hide();
-  detector.detect(video, gotDetections); 
+  detector.detect(video, gotDetections);
+  //vid = createVideo(
+  //  ['FB_Feed_v1_1.mp4', 'assets/small.ogv', 'assets/small.webm'],
+   // vidLoad);
+
   feed = createVideo(
-    ['FB_Feed_v2.mp4', 'assets/small.ogv', 'assets/small.webm'], vidLoad);
-  feed.size(960, 720);
-  //feed.position(960 + windowWidth/8, 390 + windowHeight/8);
+    ['FB_Feed_v2.mp4', 'assets/small.ogv', 'assets/small.webm'],
+    vidLoad
+  );
+
+  feed.size(AUTO, 720);
+  feed.position(540, 0);
 }
-  
 
-// function windowResized() {
-//   resizeCanvas(windowWidth, windowHeight);
-//   // video.size(windowWidth - 200, windowHeight - 200);
-// }
-
-
-function mousePressed() {
-	let fs = fullscreen();
-	fullscreen(!fs);
-}
 
 
 function vidLoad() {
   feed.loop();
   feed.volume(0);
-  //feed.position(960 + windowWidth/8, 390 + windowHeight/8);
 }
 
 
 function draw() {
   clear();
-  image(video, windowWidth/8, windowHeight/8, 960, 720);
-  //video.size(windowWidth - 200, windowHeight - 200);
-  feed.position(720 + windowWidth/8, windowHeight/8);
+  push();
+  translate(960,0);
+  scale(-1.0,1.0);
+  image(video, 0, 0, 960, 720);
+  pop();
 
-  
   let labels = Object.keys(detections);
   for (let label of labels) {
     let objects = detections[label];
     for (let i = objects.length - 1; i >= 0; i--) {
       let object = objects[i];
-      if (object.label === 'person') {
+      if (object.label == 'person') {
         if (object.x <= 320) {
         //fill('rgba(0,255,0, 0)');
-        image(emoPos, object.x - 45, object.y + 35 - 30);
+        push();
+        translate(960,0);
+        scale(-1.0,1.0);      
+        image(emoPos, object.x + 10, object.y + 30);
         noFill();
-        stroke(85);
+        stroke(235);
         strokeWeight(3);
         rect(object.x, object.y, object.width, object.height);
-        //noStroke();
-        //fill(0, 0, 0);
+        pop();
+        push();
+        translate(960,0);
+        //scale(-1.0,1.0); 
+        noStroke();
+        fill(0, 0, 0);
         //strokeWeight(3);
-        //text(object.label + " No. " + object.id, object.x + 10, object.y + 30);
-        //textSize(28);
+        text(object.label, object.x + 10, object.y + 24);
+        textSize(28);
+        pop();
         }
         if (object.x > 320 && object.x <= 640) {
          //fill(0, 255, 0, object.timer);
-        image(emoNeu, object.x + 5, object.y + 35 -30);
+        image(emoNeu, object.x + 10, object.y + 30);
         noFill();
-        stroke(85);
+        stroke(235);
         strokeWeight(3);
         rect(object.x, object.y, object.width, object.height);
-        //noStroke();
-        //fill(0, 0, 0);
-        //text(object.label + " No. " + object.id, object.x + 10, object.y + 30);
-        //textSize(28);
+        noStroke();
+        fill(0, 0, 0);
+        text(object.label, object.x + 10, object.y + 24);
+        textSize(28);
       }
       if (object.x > 640 && object.x <= 960) {
         //fill(0, 255, 0, object.timer);
-       image(emoNeg, object.x +10, object.y + 35 - 30);
+       image(emoNeg, object.x + 10, object.y + 30);
        noFill();
-       stroke(85);
+       stroke(235);
        strokeWeight(3);
        rect(object.x, object.y, object.width, object.height);
-       //noStroke();
-       //fill(0, 0, 0);
-       //text(object.label + " No. " + object.id, object.x + 10, object.y + 24);
-       //textSize(28);
+       noStroke();
+       fill(0, 0, 0);
+       text(object.label, object.x + 10, object.y + 24);
+       textSize(28);
      }
+     //pop();
       }
       object.timer -= 2;
       if (object.timer < 0) {
