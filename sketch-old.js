@@ -99,20 +99,30 @@ function setup() {
    // vidLoad);
 
   feed = createVideo(
-    ['FB_Feed_v2.mp4', 'assets/small.ogv', 'assets/small.webm'],
+    ['FB-Feed-Final.mp4', 'assets/small.ogv', 'assets/small.webm'],
     vidLoad
   );
 
   feed.size(AUTO, 720);
-  feed.position(540, 0);
+  feed.position(450, 0);
 }
 
 
 
 function vidLoad() {
-  feed.loop();
-  feed.volume(0);
+  feed.play();
+  feed.noLoop();
+  feed.volume(100);
 }
+
+
+
+
+// function mousePressed() {
+// 	let fs = fullscreen();
+// 	fullscreen(!fs);
+// }
+
 
 
 function draw() {
