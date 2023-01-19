@@ -31,6 +31,7 @@ function gotDetections(error, results) {
     console.error(error);
   }
 
+  
   let labels = Object.keys(detections);
   for (let label of labels) {
     let objects = detections[label];

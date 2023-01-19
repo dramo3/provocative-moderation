@@ -134,45 +134,53 @@ function draw() {
         push();
         translate(960,0);
         scale(-1.0,1.0);      
-        image(emoPos, object.x + 10, object.y + 30);
+        image(emoNeg, object.x + 10, object.y + 30);
         noFill();
         stroke(235);
         strokeWeight(3);
         rect(object.x, object.y, object.width, object.height);
         pop();
-        push();
-        translate(960,0);
-        //scale(-1.0,1.0); 
-        noStroke();
-        fill(0, 0, 0);
-        //strokeWeight(3);
-        text(object.label, object.x + 10, object.y + 24);
-        textSize(28);
-        pop();
+        // push();
+        // translate(960,0);
+        // //scale(-1.0,1.0); 
+        // noStroke();
+        // fill(0, 0, 0);
+        // //strokeWeight(3);
+        // text(object.label, object.x + 10, object.y + 24);
+        // textSize(28);
+        // pop();
         }
         if (object.x > 320 && object.x <= 640) {
          //fill(0, 255, 0, object.timer);
+        push();
+        translate(960,0);
+        scale(-1.0,1.0);
         image(emoNeu, object.x + 10, object.y + 30);
         noFill();
         stroke(235);
         strokeWeight(3);
         rect(object.x, object.y, object.width, object.height);
-        noStroke();
-        fill(0, 0, 0);
-        text(object.label, object.x + 10, object.y + 24);
-        textSize(28);
+        pop();
+        // noStroke();
+        // fill(0, 0, 0);
+        // text(object.label, object.x + 10, object.y + 24);
+        // textSize(28);
       }
       if (object.x > 640 && object.x <= 960) {
         //fill(0, 255, 0, object.timer);
-       image(emoNeg, object.x + 10, object.y + 30);
+       push();
+       translate(960,0);
+       scale(-1.0,1.0);
+       image(emoPos, object.x + 10, object.y + 30);
        noFill();
        stroke(235);
        strokeWeight(3);
        rect(object.x, object.y, object.width, object.height);
-       noStroke();
-       fill(0, 0, 0);
-       text(object.label, object.x + 10, object.y + 24);
-       textSize(28);
+       pop();
+    //    noStroke();
+    //    fill(0, 0, 0);
+    //    text(object.label, object.x + 10, object.y + 24);
+    //    textSize(28);
      }
      //pop();
       }
