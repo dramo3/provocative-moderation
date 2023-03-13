@@ -97,7 +97,7 @@ function setup() {
   const constraints = {
     video: { 
   facingMode: "user", frameRate: 3, width:1024, height: 540},
-  
+    // frameRate is not showing any effect...
     //facingMode: { exact: "environment" },
     //facingMode: { exact: "environment" },
   };
@@ -117,10 +117,12 @@ function setup() {
   //capture.hide()
 
  // Creating feed from harddrive 
+ /*
  feed = createVideo(
   ['FB_Feed_v1_1.mp4', 'assets/small.ogv', 'assets/small.webm'],
   vidLoad
 );
+*/
 
  // Alternatively: create feed from iFrames 
 
@@ -135,7 +137,7 @@ function setup() {
   videoEl.style.width=window.innerWidth/3*2 + "px";
   videoEl.style.height=window.innerHeight + "px";
   videoEl.style.margin="80px 0px 80px 50px";
-
+/*
   let feedEl=document.querySelectorAll("video")[1];
   feedEl.style.position="absolute";
   feedEl.style.left= ((window.innerWidth/3)*2 + 50 + "px");
@@ -144,6 +146,15 @@ function setup() {
   feedEl.style.width=(window.innerWidth/3) -100 + "px";
   feedEl.style.height=window.innerHeight + "px";
   feedEl.style.margin="80px 50px 80px 0px";
+*/
+  let iframeEl=document.querySelector("iframe");
+  iframeEl.style.position="absolute";
+  iframeEl.style.left= ((window.innerWidth/3)*2 + 50 + "px");
+  iframeEl.style.top="0";
+  iframeEl.style.zIndex="-1";
+  iframeEl.style.width=(window.innerWidth/3) -100 + "px";
+  iframeEl.style.height=window.innerHeight + "px";
+  iframeEl.style.margin="80px 50px 80px 0px";
 
  // What was detector.detect again?
   detector.detect(capture, gotDetections);
@@ -151,13 +162,13 @@ function setup() {
 }
 
 
-
+/*
 function vidLoad() {
   //feed.play();
   feed.noLoop();
   feed.volume(100);
 }
-
+*/
 
 function draw() {
 
