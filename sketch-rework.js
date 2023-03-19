@@ -7,16 +7,18 @@
 // p5.js Web Editor - Webcam: https://editor.p5js.org/codingtrain/sketches/VIYRpcME3
 // p5.js Web Editor - Webcam Persistence: https://editor.p5js.org/codingtrain/sketches/Vt9xeTxWJ
 
-// let img;
 let emoNeu;
 let emoPos;
 let emoNeg;
+let emoSize;
+let emoCount = [0, 0, 0, 0];
 let capture;
 let feed;
 let detector;
 let detections = {};
 let idCount = 0;
 let title = [0, 0, 0];
+let isAction = false;
 
 function preload() {
   emoNeu = loadImage('emoNeu.png');
@@ -88,21 +90,21 @@ function gotDetections(error, results) {
 }
 
 
-
+let factor=[];
 function setup() {
-
+  
   // Dont remove or change anything from the function below. This is what you need to set any ratio
-  // Webcam footage, ideal resolution settings (1024, 540), 
-  createCanvas((window.innerWidth/3)*2, window.innerHeight);
+  // Webcam footage, ideal resolution settings (1024, 540), facingMode: "user", "environment", 
+  createCanvas((window.innerWidth/3)*2 - 50 * 2, (window.innerWidth/3*2) * 0.527);
   const constraints = {
     video: { 
   facingMode: "user", frameRate: 3, width:1024, height: 540},
-    // frameRate is not showing any effect...
-    //facingMode: { exact: "environment" },
-    //facingMode: { exact: "environment" },
+
   };
 
-  
+  factor[0]=width / 1024;
+  factor[1]=height / 540;
+  emoSize = width / 7;
 
   navigator.mediaDevices
     .getUserMedia(constraints)
@@ -113,8 +115,6 @@ function setup() {
 
   capture = createCapture(constraints);
   capture.size(1024, 540);
-  //capture.translate(-1,1);
-  //capture.hide()
 
  // Creating feed from harddrive 
  /*
@@ -129,14 +129,8 @@ function setup() {
 
   //Styling video element[0] = webcam and video element[1] = feed
 
-  let videoEl=document.querySelectorAll("video")[0];
-  videoEl.style.position="absolute";
-  videoEl.style.left="0px";
-  videoEl.style.top="0";
-  videoEl.style.zIndex="-1";
-  videoEl.style.width=window.innerWidth/3*2 + "px";
-  videoEl.style.height=window.innerHeight + "px";
-  videoEl.style.margin="80px 0px 80px 50px";
+  document.querySelectorAll("video")[0].id="capture";
+  
 /*
   let feedEl=document.querySelectorAll("video")[1];
   feedEl.style.position="absolute";
@@ -147,14 +141,6 @@ function setup() {
   feedEl.style.height=window.innerHeight + "px";
   feedEl.style.margin="80px 50px 80px 0px";
 */
-  let iframeEl=document.querySelector("iframe");
-  iframeEl.style.position="absolute";
-  iframeEl.style.left= ((window.innerWidth/3)*2 + 50 + "px");
-  iframeEl.style.top="0";
-  iframeEl.style.zIndex="-1";
-  iframeEl.style.width=(window.innerWidth/3) -100 + "px";
-  iframeEl.style.height=window.innerHeight + "px";
-  iframeEl.style.margin="80px 50px 80px 0px";
 
  // What was detector.detect again?
   detector.detect(capture, gotDetections);
@@ -174,80 +160,73 @@ function draw() {
 
   // clears each loop of previously drawn frames
   clear();
-  //push();
-  //translate(960,0);
-  //scale(-1.0,1.0);
-  //image(capture, 0, 0, 1024, 560);
-  //pop();  
+  translate(width,0);
+  scale(-1.0,1.0);
+  if (isAction == false) {
+    stroke(255);
+    strokeWeight(5);
+    rect(0, 0, width/8, height);
+  } else if (document.querySelector(".overlay").style.display != "none") {
+    document.querySelector(".overlay").style.display = "none";
+    window.setTimeout(endScreen, 30000);
+  }
+
 
   let labels = Object.keys(detections);
   for (let label of labels) {
     let objects = detections[label];
     for (let i = objects.length - 1; i >= 0; i--) {
       let object = objects[i];
+      let posX=object.x*factor[0];
+      let posY=object.y*factor[1];
+      let objW=object.width*factor[0];
+      let objH=object.height*factor[1];
       if (object.label == 'person') {
-        if (object.x <= 320) {
-        //fill('rgba(0,255,0, 0)');
-        push();
-        //translate(960,0);
-        //scale(-1.0,1.0);      
-        image(emoNeg, object.x + 10, object.y + 30);
-        noFill();
-        stroke(0);
-        strokeWeight(3);
-        rect(object.x, object.y, object.width, object.height);
-        pop();
-        // push();
-        // translate(960,0);
-        // //scale(-1.0,1.0); 
-        // noStroke();
-        // fill(0, 0, 0);
-        // //strokeWeight(3);
-        // text(object.label, object.x + 10, object.y + 24);
-        // textSize(28);
-        // pop();
+        if (posX + objW/2 <= width/3) {
+          drawEmoji(emoNeg, posX, posY, objW, objH);
+          emoCount[0] += 1;
+        } else if (posX + objW/2 > width/3 && posX + objW/2 <= width/3*2) {
+          drawEmoji(emoNeu, posX, posY, objW, objH);
+          emoCount[1] += 2;
+        } else if (posX + objW/2 > width/3*2 && posX + objW/2 <= width) {
+          drawEmoji(emoPos, posX, posY, objW, objH);
+          emoCount[2] += 3;
         }
-        if (object.x > 320 && object.x <= 640) {
-         //fill(0, 255, 0, object.timer);
-        push();
-        //translate(960,0);
-        //scale(-1.0,1.0);
-        image(emoNeu, object.x + 10, object.y + 30);
-        noFill();
-        stroke(0);
-        strokeWeight(3);
-        rect(object.x, object.y, object.width, object.height);
-        pop();
-        // noStroke();
-        // fill(0, 0, 0);
-        // text(object.label, object.x + 10, object.y + 24);
-        // textSize(28);
-      }
-      if (object.x > 640 && object.x <= 960) {
-        //fill(0, 255, 0, object.timer);
-       push();
-       //translate(960,0);
-       //scale(-1.0,1.0);
-       image(emoPos, object.x + 10, object.y + 30);
-       noFill();
-       stroke(0);
-       strokeWeight(3);
-       rect(object.x, object.y, object.width, object.height);
-       pop();
-    //    noStroke();
-    //    fill(0, 0, 0);
-    //    text(object.label, object.x + 10, object.y + 24);
-    //    textSize(28);
-     }
-     //pop();
+
+        emoCount[3]++;
+
+        if (document.querySelector(".overlay").style.display != "none") {
+          if (posX < width/8) {
+            isAction = true;
+          } else {
+            isAction = false;
+          }
+        }
+        
+
       }
       object.timer -= 2;
       if (object.timer < 0) {
         objects.splice(i, 1);
       }
-
     }
   }  
+}
+
+
+function endScreen(){
+  let average = (emoCount[0] + emoCount[1] + emoCount[2]) / emoCount[3];
+  let domEndScreen = document.querySelector(".endScreen");
+  domEndScreen.style.display = "block";
+  domEndScreen.innerHTML = average;
+}
+
+function drawEmoji(emo, x, y, w, h) {
+  image(emo, x + w/2 - emoSize/2, y, emoSize, emoSize);
+  noFill();
+  stroke(0);
+  strokeWeight(3);
+  rect(x, y, w, h);
 }
 
 // function mousePressed() {
@@ -255,3 +234,5 @@ function draw() {
 //   feed.play();
 //   feed.noLoop();
 // }
+
+

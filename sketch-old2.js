@@ -8,6 +8,7 @@
 // p5.js Web Editor - Webcam Persistence: https://editor.p5js.org/codingtrain/sketches/Vt9xeTxWJ
 
 // let img;
+let bground;
 let emoNeu;
 let emoPos;
 let emoNeg;
@@ -19,6 +20,7 @@ let idCount = 0;
 let title = [0, 0, 0];
 
 function preload() {
+  mock = loadImage('phone-mockup.png');
   emoNeu = loadImage('emoNeu.png');
   emoPos = loadImage('emoPos.png');
   emoNeg = loadImage('emoNeg.png');
@@ -88,6 +90,7 @@ function gotDetections(error, results) {
 
 function setup() {
   createCanvas(960, 720);
+
   video = createCapture(VIDEO);
   // Rahmen werden nicht mehr angezeigt, wenn .size auf AUTO
   //video.size(AUTO, AUTO);
@@ -99,7 +102,7 @@ function setup() {
    // vidLoad);
 
   feed = createVideo(
-    ['FB-Feed-Final.mp4', 'assets/small.ogv', 'assets/small.webm'],
+    ['IG-Feed-Final.mp4', 'assets/small.ogv', 'assets/small.webm'],
     vidLoad
   );
 
@@ -110,7 +113,7 @@ function setup() {
 
 
 function vidLoad() {
-  feed.play();
+  //feed.play();
   feed.noLoop();
   feed.volume(100);
 }
@@ -123,15 +126,19 @@ function vidLoad() {
 // 	fullscreen(!fs);
 // }
 
-
+//image(img, dx, dy, dWidth, dHeight, sx, sy, [sWidth], [sHeight], [fit], [xAlign], [yAlign])
 
 function draw() {
   clear();
   push();
   translate(960,0);
   scale(-1.0,1.0);
-  image(video, 0, 0, 960, 720);
+  //image(video, 0, 0, 960/2, 720, 0, 0, CONTAIN);
+  //image(video, 960/2, 720/2, 960, 720);
+
+  //image(video, 0, 0, video.width/2, video.height, 0, 0, video.width/2, video.height, CONTAIN, LEFT);
   pop();
+  //image(mock, 0, 0);
 
   let labels = Object.keys(detections);
   for (let label of labels) {
@@ -201,4 +208,11 @@ function draw() {
 
     }
   }  
+}
+
+
+function mousePressed() {
+  feed.time(0);
+  feed.play();
+  feed.noLoop();
 }
