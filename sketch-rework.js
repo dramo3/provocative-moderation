@@ -10,6 +10,8 @@
 let emoNeu;
 let emoPos;
 let emoNeg;
+//emoOK original .png is mirrored
+let emoOK;
 let emoSize;
 let emoCount = [0, 0, 0, 0];
 let capture;
@@ -21,9 +23,10 @@ let title = [0, 0, 0];
 let isAction = false;
 
 function preload() {
-  emoNeu = loadImage('emoNeu.png');
-  emoPos = loadImage('emoPos.png');
-  emoNeg = loadImage('emoNeg.png');
+  emoNeu = loadImage('emoNeu2.png');
+  emoPos = loadImage('emoPos2.png');
+  emoNeg = loadImage('emoNeg2.png');
+  emoOK = loadImage('emoOKmirrored.png');
 detector = ml5.objectDetector('cocossd');
 }
 
@@ -98,13 +101,14 @@ function setup() {
   createCanvas((window.innerWidth/3)*2 - 50 * 2, (window.innerWidth/3*2) * 0.527);
   const constraints = {
     video: { 
-  facingMode: "user", frameRate: 3, width:1024, height: 540},
+  facingMode: "environment", frameRate: 3, width:1024, height: 540},
 
   };
 
   factor[0]=width / 1024;
   factor[1]=height / 540;
-  emoSize = width / 7;
+  emoSize1 = width / 7;
+  emoSize2 = width / 4.5;
 
   navigator.mediaDevices
     .getUserMedia(constraints)
@@ -163,9 +167,15 @@ function draw() {
   translate(width,0);
   scale(-1.0,1.0);
   if (isAction == false) {
-    stroke(255);
-    strokeWeight(5);
-    rect(0, 0, width/8, height);
+    //stroke(255);
+    //strokeWeight(5);
+    push();
+    //translate(0,height);
+    //translate(width * -1, 0);
+    //scale(1.0,-1.0);
+    image(emoOK, 50, 50, emoSize1, emoSize1);
+    pop();
+    //rect(0, 0, width/8, height);
   } else if (document.querySelector(".overlay").style.display != "none") {
     document.querySelector(".overlay").style.display = "none";
     window.setTimeout(endScreen, 30000);
@@ -222,7 +232,7 @@ function endScreen(){
 }
 
 function drawEmoji(emo, x, y, w, h) {
-  image(emo, x + w/2 - emoSize/2, y, emoSize, emoSize);
+  image(emo, x + w/2 - emoSize2/2, y, emoSize2, emoSize2);
   noFill();
   stroke(0);
   strokeWeight(3);
