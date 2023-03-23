@@ -10,6 +10,7 @@
 let emoNeu;
 let emoPos;
 let emoNeg;
+let emoRes;
 //emoOK original .png is mirrored
 let emoOK;
 let emoSize;
@@ -26,6 +27,7 @@ function preload() {
   emoNeu = loadImage('emoNeu2.png');
   emoPos = loadImage('emoPos2.png');
   emoNeg = loadImage('emoNeg2.png');
+  emoRes = loadImage('emoRes.png');
   emoOK = loadImage('emoOKmirrored.png');
 detector = ml5.objectDetector('cocossd');
 }
@@ -178,7 +180,7 @@ function draw() {
     //rect(0, 0, width/8, height);
   } else if (document.querySelector(".overlay").style.display != "none") {
     document.querySelector(".overlay").style.display = "none";
-    window.setTimeout(endScreen, 30000);
+    window.setTimeout(endScreen, 100000);
   }
 
 
@@ -196,10 +198,12 @@ function draw() {
           drawEmoji(emoNeg, posX, posY, objW, objH);
           emoCount[0] += 1;
         } else if (posX + objW/2 > width/3 && posX + objW/2 <= width/3*2) {
-          drawEmoji(emoNeu, posX, posY, objW, objH);
+          drawEmoji(emoRes2, posX, posY, objW, objH);
+          //emoCount[1] += 5;
           emoCount[1] += 2;
         } else if (posX + objW/2 > width/3*2 && posX + objW/2 <= width) {
           drawEmoji(emoPos, posX, posY, objW, objH);
+          //emoCount[2] += 10;
           emoCount[2] += 3;
         }
 
@@ -223,9 +227,22 @@ function draw() {
   }  
 }
 
+//let myIframe = document.getElementById('iframe');
+/*
+let myIframe = document.querySelector("rightbox responsive-iframe");
+myIframe.onload = function () {
+    myIframe.contentWindow.scrollTo(0,10000);
+}
+*/
+
+ document.getElementById('rightbox fakeiframe').scrollTo(0,20000);
+
 
 function endScreen(){
   let average = (emoCount[0] + emoCount[1] + emoCount[2]) / emoCount[3];
+  //let averageNeg = (emoCount[0] * 10) / emoCount[3];
+  //let averageNeu = (emoCount[1] * 2) / emoCount[3];
+  //let averagePos = (emoCount[2] * 1) / emoCount[3];
   let domEndScreen = document.querySelector(".endScreen");
   domEndScreen.style.display = "block";
   domEndScreen.innerHTML = average;
